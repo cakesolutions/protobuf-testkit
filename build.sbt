@@ -3,6 +3,8 @@
 
 import sbt.Keys._
 
+version := "1.0.0-SNAPSHOT"
+
 // @protocol@
 //
 // The protocols are defined in the directory that contains the
