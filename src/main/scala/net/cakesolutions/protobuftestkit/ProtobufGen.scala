@@ -20,7 +20,7 @@ modification, are permitted provided that the following conditions are met:
  */
 package net.cakesolutions.protobuftestkit
 
-import com.google.protobuf.Descriptors
+import com.google.protobuf.{ByteString, Descriptors}
 import com.google.protobuf.Descriptors.FieldDescriptor
 import com.trueaccord.scalapb.{GeneratedMessage, GeneratedMessageCompanion, Message}
 import org.scalacheck.{Arbitrary, Gen}
@@ -29,6 +29,10 @@ import org.scalacheck.{Arbitrary, Gen}
   * Defines generators for Protobuf-based messages
   */
 object ProtobufGen {
+
+  lazy val genByteString: Gen[ByteString] = {
+    Gen.containerOf[Array, Byte](Arbitrary.arbByte.arbitrary).map(ByteString.copyFrom)
+  }
 
   /**
     * Returns a generator for the ScalaPB-based message defined by its ``companion``. The companion is typically
@@ -54,7 +58,7 @@ object ProtobufGen {
 
         val fieldGen: Gen[Any] = field.getType match {
           case Type.BOOL ⇒ Arbitrary.arbBool.arbitrary
-          case Type.BYTES ⇒ Gen.containerOf(Arbitrary.arbByte.arbitrary)
+          case Type.BYTES ⇒ genByteString
           case Type.DOUBLE ⇒ Arbitrary.arbDouble.arbitrary
           case Type.ENUM ⇒ Gen.oneOf(companion.enumCompanionForField(field).javaDescriptor.getValues.toList)
           case Type.FIXED32 ⇒ Arbitrary.arbDouble.arbitrary

@@ -20,5 +20,6 @@ message Envelope {
     // An inner message
     message Inner {
         string text = 1;
+        bytes payload = 2;
     };
 }
